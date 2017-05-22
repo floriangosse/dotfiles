@@ -2,7 +2,6 @@
 alias ll='ls -lA'
 alias la='ls -lAh'
 alias rgrep='grep -Rn'
-alias take=
 alias take-temp='take $(mktemp -u)'
 
 # Git
