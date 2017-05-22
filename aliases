@@ -1,0 +1,8 @@
+# General
+alias rgrep='grep -Rn'
+alias take=
+alias take-temp='take $(mktemp -u)'
+
+# Git
+alias gst='git status --short --branch'
+alias gap='git add -p'
