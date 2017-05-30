@@ -3,3 +3,17 @@ take () {
 	mkdir -p $1
 	cd $1
 }
+
+# NPM
+npm-upgrade-globals () {
+	npm outdated --global --json | jq -r 'to_entries | .[] | .key + "@" + .value.latest' | xargs npm install --global
+}
+
+# NVM
+nvm-versions-upgrade-globals () {
+	ls -1 ~/.nvm/versions/node/ | while read version; do
+		nvm use $version
+		npm-upgrade-globals
+	done
+	nvm use default
+}
