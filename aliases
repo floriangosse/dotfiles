@@ -1,5 +1,5 @@
 # General
-alias ll='ls -lA'
+alias ll='ls -l'
 alias la='ls -lAh'
 alias rgrep='grep -Rn'
 alias take-temp='take $(mktemp -u)'
