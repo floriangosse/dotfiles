@@ -10,6 +10,13 @@ npm-upgrade-globals () {
 }
 
 # NVM
+nvm-upgrade () {
+	nvm install $1 --reinstall-packages-from=$(nvm version)
+	nvm use $1
+	npm install -g npm
+	npm upgrade -g
+}
+
 nvm-versions-upgrade-globals () {
 	ls -1 ~/.nvm/versions/node/ | while read version; do
 		nvm use $version
