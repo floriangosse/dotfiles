@@ -6,6 +6,7 @@ alias take-temp='take $(mktemp -u)'
 
 # Git
 alias gst='git status --short --branch'
+alias gco='git checkout'
 alias gcb='git checkout -b'
 alias gcm='git checkout master'
 alias gap='git add -p'
