@@ -21,3 +21,9 @@ alias dnfs="dnf search"
 alias dnfu="sudo dnf upgrade"
 alias dnfi="sudo dnf install"
 alias dnfr="sudo dnf remove"
+
+# APT
+alias agi='sudo apt-get install'
+alias agr='sude apt-get remove'
+alias agp='sudo apt-get purge'
+alias aguu='sudo apt-get update && sudo apt-get upgrade'
