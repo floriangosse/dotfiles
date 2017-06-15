@@ -4,6 +4,14 @@ take () {
 	cd $1
 }
 
+# Creates files and corresponding folders
+create () {
+	for file in "$@"; do
+		mkdir -p "$(dirname $file)";
+		touch $file;
+	done;
+}
+
 # NPM
 npm-upgrade-globals () {
 	npm outdated --global --json | jq -r 'to_entries | .[] | .key + "@" + .value.latest' | xargs npm install --global
