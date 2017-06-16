@@ -14,7 +14,7 @@ create () {
 
 # NPM
 npm-upgrade-globals () {
-	npm outdated --global --json | jq -r 'to_entries | .[] | .key + "@" + .value.latest' | xargs npm install --global
+	npm outdated --global --json | jq -r 'to_entries | .[] | .key + "@" + .value.latest' | xargs --no-run-if-empty npm install --global
 }
 
 # NVM
