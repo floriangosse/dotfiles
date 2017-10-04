@@ -29,6 +29,8 @@ alias dnfr='sudo dnf remove'
 
 # APT
 alias agi='sudo apt-get install'
-alias agr='sude apt-get remove'
+alias agr='sudo apt-get remove'
 alias agp='sudo apt-get purge'
 alias aguu='sudo apt-get update && sudo apt-get upgrade'
+
+# URL encoding/decoding
