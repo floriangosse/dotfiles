@@ -65,4 +65,16 @@ noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
 
+" ===============
+" Status line
+" ===============
+highlight StatusLine cterm=none ctermbg=239 ctermfg=251 guibg=#4e4e4e guifg=#c6c6c6
+"highlight StatusLineNC ctermbg=239 ctermfg=251
+execute 'highlight! User5 ctermfg=red ctermbg=yellow'
+
+set laststatus=2
+set statusline=\ 
+set statusline+=hello
+set statusline+=\ world
+
 
