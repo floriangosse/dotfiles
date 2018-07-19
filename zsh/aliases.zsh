@@ -4,13 +4,6 @@ alias la='ls -lAh'
 alias rgrep='grep -Rn'
 alias take-temp='take $(mktemp -u)'
 
-# Vim
-# On RedHat/Fedora systems vimx is the variant which has X11 support
-if command -v vimx > /dev/null; then
-    alias vi='vimx'
-    alias vim='vimx'
-fi
-
 # Git
 alias gst='git status --short --branch'
 alias gco='git checkout'

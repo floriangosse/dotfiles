@@ -1,0 +1,43 @@
+# Extract configuration
+# Enable interactive comments
+setopt interactivecomments
+
+# zmv
+autoload -U zmv
+alias zmv='noglob zmv'
+
+
+source ~/.zsh/completion.zsh
+source ~/.zsh/keybindings.zsh
+source ~/.zsh/history.zsh
+source ~/.zsh/functions.zsh
+source ~/.zsh/aliases.zsh
+
+
+# Load nvm if installed
+export NVM_DIR="$HOME/.nvm"
+if [[ -f "$NVM_DIR/nvm.sh" ]]; then
+    source "$NVM_DIR/nvm.sh"
+
+    if [[ -f "$NVM_DIR/bash_completion" ]]; then
+        source "$NVM_DIR/bash_completion"
+    fi
+fi
+
+# Load local zshrc if available
+if [[ -f ~/.zshrc.local ]]; then
+    source ~/.zshrc.local
+fi
+
+# Load zsh-syntax-highlighting if installed
+if [[ -f ~/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    # Configuration for zsh-syntax-highlighting
+    # TODO: Extract configuration
+    ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+    ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
+
+    source ~/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
+# Load the theme
+source ~/.zsh/theme.zsh
