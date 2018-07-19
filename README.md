@@ -7,15 +7,15 @@ Clone repository:
 cd ~ && git clone https://github.com/floriangosse/dotfiles.git .dotfiles
 ```
 
-Import files into `.zshrc`:
+Execute installation script:
 ```sh
-echo 'source ~/.dotfiles/functions' >> ~/.zshrc
-echo 'source ~/.dotfiles/aliases' >> ~/.zshrc
+~/.dotfiles/install.sh
 ```
 
-Link files:
-```sh
-cd $HOME
-ln -s ~/.dotfiles/.vimrc
-ln -s ~/.dotfiles/.tmux.conf
-```
+**Note:** Make sure that you saved your local configurations before installing.
+
+## `zsh`
+
+### Local configuration
+
+The local configuration file `.zshrc.local` will be loaded automatically if available.
