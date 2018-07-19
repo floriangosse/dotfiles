@@ -13,6 +13,10 @@ source ~/.zsh/history.zsh
 source ~/.zsh/functions.zsh
 source ~/.zsh/aliases.zsh
 
+# Load z if installed
+if [[ -f ~/.zsh/plugins/z/z.sh ]]; then
+    source ~/.zsh/plugins/z/z.sh
+fi
 
 # Load nvm if installed
 export NVM_DIR="$HOME/.nvm"
