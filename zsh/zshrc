@@ -2,6 +2,9 @@
 # Enable interactive comments
 setopt interactivecomments
 
+# Enable auto cd
+setopt auto_cd
+
 # zmv
 autoload -U zmv
 alias zmv='noglob zmv'
@@ -10,6 +13,7 @@ alias zmv='noglob zmv'
 source ~/.zsh/completion.zsh
 source ~/.zsh/keybindings.zsh
 source ~/.zsh/history.zsh
+source ~/.zsh/clipboard.zsh
 source ~/.zsh/functions.zsh
 source ~/.zsh/aliases.zsh
 

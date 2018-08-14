@@ -1,4 +1,9 @@
 # General
+alias -g ...='../..'
+alias -g ....='../../..'
+alias -g .....='../../../..'
+alias -g ......='../../../../..'
+
 alias ll='ls -l'
 alias la='ls -lAh'
 alias rgrep='grep -Rn'
