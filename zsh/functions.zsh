@@ -45,3 +45,7 @@ man() {
         LESS_TERMCAP_us=$(printf "\e[1;32m") \
             man "$@"
 }
+
+s3-cat() {
+    aws s3 cp $1 - | cat
+}
