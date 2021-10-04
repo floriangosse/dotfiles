@@ -49,3 +49,8 @@ man() {
 s3-cat() {
     aws s3 cp $1 - | cat
 }
+
+s3-gunzip() {
+    aws s3 cp $1 - | gunzip
+}
+
