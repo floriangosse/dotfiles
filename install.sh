@@ -154,3 +154,20 @@ if ask "Install nvm?" N; then
         log_process_success
     fi
 fi
+
+# Install gvm
+if ask "Install gvm?" N; then
+    if [[ -d ~/.gvm/.git ]]; then
+        log_info "Already installed"
+
+        log_process_start "Update gvm"
+        pushd ~/.gvm > /dev/null
+        git pull --quiet origin master
+        popd > /dev/null
+        log_process_success
+    else
+        log_process_start "Download gvm"
+        git clone --quiet https://github.com/moovweb/gvm.git ~/.gvm
+        log_process_success
+    fi
+fi

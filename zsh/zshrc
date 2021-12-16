@@ -32,6 +32,15 @@ if [[ -f "$NVM_DIR/nvm.sh" ]]; then
     fi
 fi
 
+export GVM_ROOT="$HOME/.gvm"
+if [[ -f "$GVM_ROOT/scripts/gvm-default" ]]; then
+    source "$GVM_ROOT/scripts/gvm-default"
+
+    if [[ -f "$GVM_ROOT/scripts/completion" ]]; then
+        source "$GVM_ROOT/scripts/completion"
+    fi
+fi
+
 # Load local zshrc if available
 if [[ -f ~/.zshrc.local ]]; then
     source ~/.zshrc.local
