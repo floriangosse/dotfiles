@@ -58,3 +58,5 @@ fi
 
 # Load the theme
 source ~/.zsh/theme.zsh
+
+export PATH="${HOME}/.bin:${PATH}"
