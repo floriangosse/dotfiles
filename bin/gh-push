@@ -11,7 +11,7 @@ if ! command -v gh > /dev/null; then
     exit
 fi
 
-branch=$(git branch --format "%(refname:short)" | awk '{ print tolower($0) }')
+branch=$(git branch --show-current | awk '{ print tolower($0) }')
 if [[ $branch =~ [a-z]{1,}-[0-9]{1,} ]]; then
     ticket=$(echo "$branch" | sed -E -e 's/([a-z]{1,}-[0-9]{1,})_.*/\1/g' | awk '{ print toupper($0) }')
     title=$(echo "$branch" | sed -E -e 's/[a-z]{1,}-[0-9]{1,}_(.*)/\1/g' -e 's/-/ /g')
