@@ -11,6 +11,27 @@ if ! command -v gh > /dev/null; then
     exit
 fi
 
+base_branch_priority=(
+    develop
+    main
+    master
+)
+
+base_branch=""
+for possible_base_branch in ${base_branch_priority[@]}; do
+    base_branch=$(git branch --format "%(refname:short)" | grep "${possible_base_branch}");
+    if ! [[ -z "${base_branch}" ]]; then
+        break;
+    fi
+done
+
+if [[ -z "${base_branch}" ]]; then
+    supported_base_branch_list=$(printf ", %s" "${base_branch_priority[@]}")
+    supported_base_branch_list=${supported_base_branch_list:2}
+    echo >&2 "No matching base branch found. Supporting base branches: ${supported_base_branch_list}"
+    exit;
+fi
+
 branch=$(git branch --show-current | awk '{ print tolower($0) }')
 if [[ $branch =~ [a-z]{1,}-[0-9]{1,} ]]; then
     ticket=$(echo "$branch" | sed -E -e 's/([a-z]{1,}-[0-9]{1,})_.*/\1/g' | awk '{ print toupper($0) }')
@@ -19,6 +40,6 @@ if [[ $branch =~ [a-z]{1,}-[0-9]{1,} ]]; then
 
     open_patches=$(gh pr list --head "$branch" --json "number" --jq "length")
     if [[ "$open_patches" -eq "0" ]]; then
-        gh pr create --assignee @me --title "[$ticket] ${capitalized_title}" --body "resolves $ticket" --draft --base develop
+        gh pr create --assignee @me --title "[$ticket] ${capitalized_title}" --body "resolves $ticket" --draft --base "${base_branch}"
     fi
 fi
