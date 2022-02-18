@@ -19,7 +19,7 @@ base_branch_priority=(
 
 base_branch=""
 for possible_base_branch in ${base_branch_priority[@]}; do
-    base_branch=$(git branch --format "%(refname:short)" | grep "${possible_base_branch}");
+    base_branch=$(git branch --format "%(refname:short)" | grep --fixed-strings --line-regexp "${possible_base_branch}");
     if ! [[ -z "${base_branch}" ]]; then
         break;
     fi
