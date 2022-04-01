@@ -34,8 +34,8 @@ fi
 
 branch=$(git branch --show-current | awk '{ print tolower($0) }')
 if [[ $branch =~ [a-z]{1,}-[0-9]{1,} ]]; then
-    ticket=$(echo "$branch" | sed -E -e 's/([a-z]{1,}-[0-9]{1,})_.*/\1/g' | awk '{ print toupper($0) }')
-    title=$(echo "$branch" | sed -E -e 's/[a-z]{1,}-[0-9]{1,}_(.*)/\1/g' -e 's/-/ /g')
+    ticket=$(echo "$branch" | sed -E -e 's/([a-z]{1,}-[0-9]{1,})[_-].*/\1/g' | awk '{ print toupper($0) }')
+    title=$(echo "$branch" | sed -E -e 's/[a-z]{1,}-[0-9]{1,}[_-](.*)/\1/g' -e 's/-/ /g')
     capitalized_title="$(echo ${title:0:1} | tr '[a-z]' '[A-Z]')${title:1}"
 
     open_patches=$(gh pr list --head "$branch" --json "number" --jq "length")
