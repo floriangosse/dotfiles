@@ -54,3 +54,56 @@ s3-gunzip() {
     aws s3 cp $1 - | gunzip
 }
 
+git-branch-delete-with-rebase-fallback() {
+    local exit_code;
+
+    local branch=${1:-}
+
+    local delete_error_output;
+    delete_error_output=$(git branch -d $branch 2>&1 >/dev/null)
+    exit_code=$?
+
+    if [[ "$exit_code" == "0" ]]; then
+        return 0
+    elif ! echo "$delete_error_output" | grep -q "is not fully merged."; then
+        echo "$delete_error_output" >&2
+        return $exit_code
+    fi
+
+    local current_branch;
+    local rebase_branch=${2:-}
+    if [[ -z "$rebase_branch" ]]; then
+        local fallback_rebase_branch;
+        fallback_rebase_branch=$(git branch --show-current);
+        exit_code=$?
+
+        if [[ "$exit_code" != "0" ]]; then
+            return $exit_code
+        elif [[ "$fallback_rebase_branch" == "" ]] || ! git symbolic-ref -q HEAD >/dev/null; then
+            echo "error: You are in 'detached HEAD' state."
+            return 1
+        fi
+
+        rebase_branch=$fallback_rebase_branch
+        current_branch=$fallback_rebase_branch
+    fi
+
+    if [[ -z "$current_branch" ]]; then
+        current_branch=$(git branch --show-current);
+        exit_code=$?
+        if [[ "$exit_code" != "0" ]]; then
+            echo "error: Deleting from a non branch isn't possible yet." >&2
+            return $exit_code
+        fi
+    fi
+
+    git checkout $branch
+    git -c advice.skippedCherryPicks=false rebase $rebase_branch
+    exit_code=$?
+    if [[ "$exit_code" != "0" ]]; then
+        git rebase --abort
+        return $exit_code
+    fi
+    git checkout $current_branch
+    git branch -d $branch
+}
