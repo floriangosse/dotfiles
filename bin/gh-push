@@ -20,6 +20,7 @@ base_branch_priority=(
 branch_prefixes=(
     feat/
     feature/
+    fix/
     bugfix/
     hotfix/
 )
