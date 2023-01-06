@@ -60,6 +60,7 @@ git-branch-delete-with-rebase-fallback() {
     local branch=${1:-}
 
     local delete_error_output;
+    # TODO: Show standard out
     delete_error_output=$(git branch -d $branch 2>&1 >/dev/null)
     exit_code=$?
 
