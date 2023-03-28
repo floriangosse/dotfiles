@@ -197,6 +197,9 @@ sudo chflags nohidden /Volumes
 echo "[TextEdit] Disable \"Rich Text\""
 defaults write com.apple.TextEdit "RichText" -bool "false"
 
+echo "[TextEdit] Open empty document by default"
+defaults write com.apple.TextEdit NSShowAppCentricOpenPanelInsteadOfUntitledFile -bool false
+
 echo "[TextEdit] Open and save files as UTF-8 in TextEdit"
 defaults write com.apple.TextEdit PlainTextEncoding -int 4
 defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
