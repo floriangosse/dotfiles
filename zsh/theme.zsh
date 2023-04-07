@@ -30,7 +30,7 @@ function fg_box_name {
 
 function fg_machine_name {
     if [[ -n $SSH_CONNECTION ]]; then
-        echo "%{$fg[white]%}at %{$fg[green]%}$(fg_box_name) %{$reset_color%}";
+        echo "%{$fg[white]%}on %{$fg[green]%}$(fg_box_name)%{$reset_color%} ";
     fi
 }
 
@@ -38,7 +38,7 @@ function fg_context {
     local machine=$(fg_machine_name)
 
     if [[ "${USER}" != "${DEFAULT_USER}" ]] || ! [[ -z "${machine}" ]]; then
-         echo "%{$fg[cyan]%}${USER} ${machine}%{$fg[white]%}in %{$reset_color%}"
+         echo "%{$fg[cyan]%}${USER} ${machine}%{$fg[white]%}in%{$reset_color%} "
     fi
 }
 
