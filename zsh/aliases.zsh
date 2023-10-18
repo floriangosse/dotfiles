@@ -38,4 +38,5 @@ alias agr='sudo apt-get remove'
 alias agp='sudo apt-get purge'
 alias aguu='sudo apt-get update && sudo apt-get upgrade'
 
-# URL encoding/decoding
+# cURL
+alias curl-headers='curl -svo /dev/null'
