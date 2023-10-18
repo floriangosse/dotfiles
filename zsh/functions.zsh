@@ -126,6 +126,12 @@ s3-gunzip() {
     aws s3 cp $1 - | gunzip
 }
 
+#
+# Export AWS credentials from assume-role as environment variables for use with other commands.
+#
+# Usage:
+#   aws sts assume-role --role-arn arn:aws:iam::123456789012:role/role-name --role-session-name "role-session-name" | aws-assume-role-env-export
+#
 aws-assume-role-env-export() {
     export $(cat | jq -r '.Credentials | ["AWS_ACCESS_KEY_ID=" + .AccessKeyId, "AWS_SECRET_ACCESS_KEY=" + .SecretAccessKey, "AWS_SESSION_TOKEN=" + .SessionToken] | .[]' | xargs)
 }
