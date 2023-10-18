@@ -1,5 +1,5 @@
 # General
-function take () {
+take () {
     mkdir -p $1
     cd $1
 }
@@ -12,12 +12,18 @@ create () {
     done;
 }
 
+#
 # NPM
+#
+
 npm-upgrade-globals () {
     npm outdated --global --json | jq -r 'to_entries | .[] | .key + "@" + .value.latest' | xargs --no-run-if-empty npm install --global
 }
 
+#
 # NVM
+#
+
 nvm-upgrade () {
     nvm install $1 --reinstall-packages-from=$(nvm version)
     nvm use $1
@@ -33,7 +39,10 @@ nvm-versions-upgrade-globals () {
     nvm use default
 }
 
-# Man
+#
+# man
+#
+
 man() {
     env \
         LESS_TERMCAP_mb=$(printf "\e[1;31m") \
@@ -46,13 +55,9 @@ man() {
             man "$@"
 }
 
-s3-cat() {
-    aws s3 cp $1 - | cat
-}
-
-s3-gunzip() {
-    aws s3 cp $1 - | gunzip
-}
+#
+# Git
+#
 
 git-branch-delete-with-rebase-fallback() {
     local exit_code;
@@ -107,4 +112,20 @@ git-branch-delete-with-rebase-fallback() {
     fi
     git checkout $current_branch
     git branch -d $branch
+}
+
+#
+# AWS
+#
+
+s3-cat() {
+    aws s3 cp $1 - | cat
+}
+
+s3-gunzip() {
+    aws s3 cp $1 - | gunzip
+}
+
+aws-assume-role-env-export() {
+    export $(cat | jq -r '.Credentials | ["AWS_ACCESS_KEY_ID=" + .AccessKeyId, "AWS_SECRET_ACCESS_KEY=" + .SecretAccessKey, "AWS_SESSION_TOKEN=" + .SessionToken] | .[]' | xargs)
 }
