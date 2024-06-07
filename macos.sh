@@ -53,7 +53,7 @@ echo "[System] Disable boot sound effects"
 sudo nvram SystemAudioVolume=" "
 
 if ask "[System] Do you want to set your computer's hostname (as done via System Preferences >> Sharing)?"; then
-    local hostname
+    hostname=""
     while true; do
         echo -n "Hostname: "
         read hostname
