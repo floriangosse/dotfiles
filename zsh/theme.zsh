@@ -123,7 +123,6 @@ function fg_git_prompt_info {
 }
 
 function fg_nvm_prompt_info() {
-    [[ -f "$NVM_DIR/nvm.sh" ]] || return
     local nvm_prompt
     nvm_prompt=$(node -v 2>/dev/null)
     [[ "${nvm_prompt}x" == "x" ]] && return
