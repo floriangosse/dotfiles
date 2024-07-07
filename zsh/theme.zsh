@@ -24,13 +24,13 @@ else
 fi
 
 
-function fg_box_name {
-    [ -f ~/.box-name ] && cat ~/.box-name || hostname
+function fg_hostname {
+    hostname
 }
 
 function fg_machine_name {
     if [[ -n $SSH_CONNECTION ]]; then
-        echo "%{$fg[white]%}on %{$fg[green]%}$(fg_box_name)%{$reset_color%} ";
+        echo "%{$fg[white]%}on %{$fg[green]%}$(fg_hostname)%{$reset_color%} ";
     fi
 }
 
@@ -153,9 +153,9 @@ $(fg_git_prompt_info)$(fg_nvm_prompt_info)
 if [[ "$(whoami)" == "root" ]]; then
 PROMPT="
 %{$fg[cyan]%}%n \
-$(machine_name)\
+$(fg_machine_name)\
 %{$fg[white]%}in \
 %{$terminfo[bold]$fg[yellow]%}${current_dir}%{$reset_color%}\
-$(git_prompt_info)
+$(fg_git_prompt_info)
 %{$terminfo[bold]$fg[red]%}# %{$reset_color%}"
 fi
