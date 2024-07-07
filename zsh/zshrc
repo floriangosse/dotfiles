@@ -32,15 +32,6 @@ if [[ -f "$NVM_DIR/nvm.sh" ]]; then
     fi
 fi
 
-# export GVM_ROOT="$HOME/.gvm"
-# if [[ -f "$GVM_ROOT/scripts/gvm-default" ]]; then
-#     source "$GVM_ROOT/scripts/gvm-default"
-
-#     if [[ -f "$GVM_ROOT/scripts/completion" ]]; then
-#         source "$GVM_ROOT/scripts/completion"
-#     fi
-# fi
-
 # Load local zshrc if available
 if [[ -f ~/.zshrc.local ]]; then
     source ~/.zshrc.local
@@ -55,6 +46,10 @@ if [[ -f ~/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; 
 
     source ~/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
+
+export PATH="/usr/local/go/bin:$PATH"
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+export PATH="${HOME}/.bin:${HOME}/.local/bin:${PATH}"
 
 # Load the theme
 source ~/.zsh/theme.zsh

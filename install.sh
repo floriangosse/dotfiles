@@ -70,25 +70,25 @@ ask () {
 DOTFILES_DIR=$HOME/.dotfiles
 
 # Update dotfiles to master branch
-log_process_start "Update $DOTFILES_DIR to master"
-pushd $DOTFILES_DIR > /dev/null
+log_process_start "Update ${DOTFILES_DIR} to master"
+pushd ${DOTFILES_DIR} > /dev/null
 git pull --quiet origin master
 popd > /dev/null
 log_process_success
 
 # Setup bin
 log_process_start "Link ~/.bin folder"
-ln -sf $DOTFILES_DIR/bin ${HOME}/.bin
+ln -sf ${DOTFILES_DIR}/bin ${HOME}/.bin
 log_process_success
 
 # Setup ZSH
 if ask "Setup ZSH?" Y; then
     log_process_start "Link ZSH files"
-    ln -sfn $DOTFILES_DIR/zsh ${HOME}/.zsh
-    ln -sf $DOTFILES_DIR/zsh/zshrc ${HOME}/.zshrc
+    ln -sfn ${DOTFILES_DIR}/zsh ${HOME}/.zsh
+    ln -sf ${DOTFILES_DIR}/zsh/zshrc ${HOME}/.zshrc
     log_process_success
 
-    pushd $DOTFILES_DIR/zsh/plugins > /dev/null
+    pushd ${DOTFILES_DIR}/zsh/plugins > /dev/null
 
     if ask "Install zsh-syntax-hightlighting?" Y; then
         if [[ -d ./zsh-syntax-highlighting/.git ]]; then
@@ -129,7 +129,7 @@ fi
 # Setup Vim
 if ask "Setup Vim?" Y; then
     log_process_start "Linking Vim files"
-    ln -sf $DOTFILES_DIR/vim/vimrc ${HOME}/.vimrc
+    ln -sf ${DOTFILES_DIR}/vim/vimrc ${HOME}/.vimrc
     log_process_success
 fi
 
@@ -137,7 +137,7 @@ fi
 # Setup tmux
 if ask "Setup tmux?" Y; then
     log_process_start "Linking tmux files"
-    ln -sf $DOTFILES_DIR/tmux/tmux.conf ${HOME}/.tmux.conf
+    ln -sf ${DOTFILES_DIR}/tmux/tmux.conf ${HOME}/.tmux.conf
     log_process_success
 fi
 
@@ -159,19 +159,13 @@ if ask "Install nvm?" N; then
     fi
 fi
 
-# Install gvm
-if ask "Install gvm?" N; then
-    if [[ -d ~/.gvm/.git ]]; then
+# Install Homebrew
+if ask "Install Homebrew?" Y; then
+    if [[ -d /opt/homebrew ]]; then
         log_info "Already installed"
-
-        log_process_start "Update gvm"
-        pushd ~/.gvm > /dev/null
-        git pull --quiet origin master
-        popd > /dev/null
-        log_process_success
     else
-        log_process_start "Download gvm"
-        git clone --quiet https://github.com/moovweb/gvm.git ~/.gvm
-        log_process_success
+        log_process_start "Install Homebrew"
+        bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        log_process_success "Install Homebrew"
     fi
 fi
