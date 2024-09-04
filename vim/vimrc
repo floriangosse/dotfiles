@@ -10,6 +10,9 @@ set number
 " Enable auto indent
 set autoindent
 
+" Make backspace behave like most other programs
+set backspace=indent,eol,start
+
 " Its often useful to 'set paste' so that the autoindent/syntax doesn't interfere
 set paste
 
