@@ -151,11 +151,11 @@ $(fg_git_prompt_info)$(fg_nvm_prompt_info)
 %{$terminfo[bold]$fg[red]%}$ %{$reset_color%}'
 
 if [[ "$(whoami)" == "root" ]]; then
-PROMPT="
+PROMPT='
 %{$fg[cyan]%}%n \
 $(fg_machine_name)\
 %{$fg[white]%}in \
 %{$terminfo[bold]$fg[yellow]%}${current_dir}%{$reset_color%}\
 $(fg_git_prompt_info)
-%{$terminfo[bold]$fg[red]%}# %{$reset_color%}"
+%{$terminfo[bold]$fg[red]%}# %{$reset_color%}'
 fi
