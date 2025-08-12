@@ -24,13 +24,50 @@ fi
 
 # Load nvm if installed
 export NVM_DIR="$HOME/.nvm"
-if [[ -f "$NVM_DIR/nvm.sh" ]]; then
-    source "$NVM_DIR/nvm.sh"
 
-    if [[ -f "$NVM_DIR/bash_completion" ]]; then
-        source "$NVM_DIR/bash_completion"
+# Setup default Node path for global packages
+_setup_default_node_path() {
+    if [[ -f "$NVM_DIR/alias/default" ]]; then
+        local default_version=$(cat "$NVM_DIR/alias/default")
+    elif [[ -d "$NVM_DIR/versions/node" ]]; then
+        local default_version=$(ls "$NVM_DIR/versions/node" | tail -1)
+    else
+        return
     fi
-fi
+
+    local node_bin_path="$NVM_DIR/versions/node/$default_version/bin"
+    if [[ -d "$node_bin_path" ]] && [[ ":$PATH:" != *":$node_bin_path:"* ]]; then
+        export PATH="$node_bin_path:$PATH"
+    fi
+}
+
+_load_nvm() {
+    if [[ -z "$NVM_LOADED" ]]; then
+        unalias nvm node npm npx 2>/dev/null || true
+        [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+        [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+        export NVM_LOADED=1
+    fi
+}
+
+_nvm_smart_wrapper() {
+    local cmd="$1"
+    shift
+
+    if command -v "$cmd" >/dev/null 2>&1; then
+        "$cmd" "$@"
+    else
+        load_nvm
+        "$cmd" "$@"
+    fi
+}
+
+_setup_default_node_path
+
+alias nvm='_load_nvm && nvm'
+alias node='_nvm_smart_wrapper node'
+alias npm='_nvm_smart_wrapper npm'
+alias npx='_nvm_smart_wrapper npx'
 
 # Load local zshrc if available
 if [[ -f ~/.zshrc.local ]]; then
