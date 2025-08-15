@@ -26,7 +26,7 @@ fi
 export NVM_DIR="$HOME/.nvm"
 if [[ -f "$NVM_DIR/nvm.sh" ]]; then
     # It seems `source nvm --no-use && nvm use default` is faster by a few milliseconds than just `source nvm.sh`.
-    time (source "$NVM_DIR/nvm.sh" --no-use && nvm use default --silent)
+    source "$NVM_DIR/nvm.sh" --no-use && nvm use default --silent
 
     if [[ -f "$NVM_DIR/bash_completion" ]]; then
         source "$NVM_DIR/bash_completion"
