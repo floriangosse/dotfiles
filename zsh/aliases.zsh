@@ -40,3 +40,6 @@ alias aguu='sudo apt-get update && sudo apt-get upgrade'
 
 # cURL
 alias curl-headers='curl -svo /dev/null'
+
+# Date/Timestamp
+alias timestamp='date +%s'
