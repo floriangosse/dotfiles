@@ -122,14 +122,6 @@ function fg_git_prompt_info {
     fi
 }
 
-function fg_nvm_prompt_info() {
-    local nvm_prompt
-    nvm_prompt=$(node -v 2>/dev/null)
-    [[ "${nvm_prompt}x" == "x" ]] && return
-    nvm_prompt=${nvm_prompt:1}
-    echo "${ZSH_THEME_NVM_PROMPT_PREFIX}${nvm_prompt}${ZSH_THEME_NVM_PROMPT_SUFFIX}"
-}
-
 # Git info.
 ZSH_THEME_GIT_PROMPT_PREFIX=" %{$fg[white]%}on%{$reset_color%} %{$fg[cyan]%}git:("
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}%{$fg[cyan]%})%{$reset_color%}"
@@ -138,15 +130,11 @@ ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[green]%}o" # Possible value: ✔ - Previous us
 ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg_bold[magenta]%}↑"
 ZSH_THEME_GIT_PROMPT_BEHIND="%{$fg_bold[magenta]%}↓"
 
-# Node info
-ZSH_THEME_NVM_PROMPT_PREFIX=" %{$fg[white]%}[⬢ " # Correct color is 243
-ZSH_THEME_NVM_PROMPT_SUFFIX="]%{$reset_color%}"
-
 # Prompt
 PROMPT='
 $(fg_context)\
 %{$terminfo[bold]$fg[yellow]%}${PWD/#$HOME/~}%{$reset_color%}\
-$(fg_git_prompt_info)$(fg_nvm_prompt_info)
+$(fg_git_prompt_info)
 %{$terminfo[bold]$fg[red]%}$ %{$reset_color%}'
 
 if [[ "$(whoami)" == "root" ]]; then
