@@ -9,10 +9,17 @@ source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
 
 if command -v brew >/dev/null; then
     echo "Homebrew installation found.";
+
     if ask "Do you want to install the dependencies for some of the setup steps? (dockutil)" Y; then
         log_process_start "Install dependencies\n"
         brew install dockutil
         log_process_success "Install dependencies"
+    fi
+
+    if ask "Do you want to install from the Brewfile? (this might take a while)" Y; then
+        log_process_start "Brewfile installation\n"
+        brew bundle --file="$(dirname "${BASH_SOURCE[0]}")/Brewfile"
+        log_process_success "Brewfile installation"
     fi
 else
     echo "Homebrew installation not found. Couldn't install dependencies. Some of the setup steps might be skipped.";

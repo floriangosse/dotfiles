@@ -40,13 +40,18 @@ export GIT_EDITOR=${EDITOR}
 
 export PATH="${HOME}/go/bin:/usr/local/go/bin:$PATH"
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
-export PATH="${HOME}/.bin:${HOME}/.local/bin:${PATH}"
+
+if [[ -d "/opt/homebrew/opt/curl" ]]; then
+    export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+fi
 
 if [[ "$OSTYPE" == darwin* ]]; then
     if [[ -d "/Applications/Visual Studio Code.app" ]]; then
         export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
     fi
 fi
+
+export PATH="${HOME}/.bin:${HOME}/.local/bin:${PATH}"
 
 # Load local zshrc if available
 if [[ -f ~/.zshrc.local ]]; then
