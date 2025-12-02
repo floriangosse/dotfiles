@@ -1,41 +1,22 @@
 #!/usr/bin/env bash
+set -e
 
-ask () {
-    # https://djm.me/ask
-    local prompt default reply
+source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
 
-    while true; do
+#
+# Dependencies
+#
 
-        if [ "${2:-}" = "Y" ]; then
-            prompt="Y/n"
-            default=Y
-        elif [ "${2:-}" = "N" ]; then
-            prompt="y/N"
-            default=N
-        else
-            prompt="y/n"
-            default=
-        fi
-
-        # Ask the question (not using "read -p" as it uses stderr not stdout)
-        echo -en "[${color_fg_light_blue} ${symbol_question}${color_clean}] $1 [$prompt] "
-
-        # Read the answer (use /dev/tty in case stdin is redirected from somewhere else)
-        read reply </dev/tty
-
-        # Default?
-        if [ -z "$reply" ]; then
-            reply=$default
-        fi
-
-        # Check if the reply is valid
-        case "$reply" in
-            Y*|y*) return 0 ;;
-            N*|n*) return 1 ;;
-        esac
-
-    done
-}
+if command -v brew >/dev/null; then
+    echo "Homebrew installation found.";
+    if ask "Do you want to install the dependencies for some of the setup steps? (dockutil)" Y; then
+        log_process_start "Install dependencies\n"
+        brew install dockutil
+        log_process_success "Install dependencies"
+    fi
+else
+    echo "Homebrew installation not found. Couldn't install dependencies. Some of the setup steps might be skipped.";
+fi
 
 # Close any open System Preferences panes, to prevent them from overriding
 # settings we're about to change
@@ -51,6 +32,7 @@ sudo -v
 
 echo "[System] Disable boot sound effects"
 sudo nvram SystemAudioVolume=" "
+sudo nvram StartupMute=%01
 
 if ask "[System] Do you want to set your computer's hostname (as done via System Preferences >> Sharing)?"; then
     hostname=""
@@ -118,14 +100,28 @@ defaults write com.apple.dock "autohide-time-modifier" -float "0.5"
 echo "[Dock] Remove autohide delay - dock appears instantly"
 defaults write com.apple.dock "autohide-delay" -float "0"
 
+echo "[Dock] Disable hot corners"
+defaults write com.apple.dock wvous-tr-corner -int 0
+defaults write com.apple.dock wvous-tl-corner -int 0
+defaults write com.apple.dock wvous-br-corner -int 0
+defaults write com.apple.dock wvous-bl-corner -int 0
+
 echo "[Dock] Don't group windows by application in Mission Control"
 defaults write com.apple.dock "expose-group-by-app" -bool "false"
+
+if command -v dockutil >/dev/null; then
+    if ask "[Dock] Should the items in the dock be removed?"; then
+        dockutil --remove all --no-restart
+    fi
+else
+    echo "[Dock] Can not setup items in dock as dockutil it not installed."
+fi
 
 #
 # Screenshots
 #
 
-echo "[Screenshot] Include data in filename"
+echo "[Screenshot] Include date in filename"
 defaults write com.apple.screencapture "include-date" -bool "true"
 
 echo "[Screenshot] Set screenshot format to PNG"
@@ -185,7 +181,9 @@ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool "true"
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool "true"
 
 echo "[Finder] Show the ~/Library folder"
-chflags nohidden ~/Library && xattr -d com.apple.FinderInfo ~/Library
+chflags nohidden ~/Library
+# This doesn't seem to work anymore
+#xattr -d com.apple.FinderInfo ~/Library
 
 echo "[Finder] Show the /Volumes folder"
 sudo chflags nohidden /Volumes
@@ -209,10 +207,21 @@ defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
 #
 
 echo "[Spotlight] Disable Spotlight indexing for any volume that gets mounted and has not yet been indexed before"
-sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
+set +e
+(
+    sudo defaults write /System/Volumes/Data/.Spotlight-V100/VolumeConfiguration Exclusions -array /Volumes
+    sudo defaults write /System/Volumes/Data/.Spotlight-V100/VolumeConfiguration Exclusions -array /Network
+)
+spotlight_exclusion_return=$?
+set -e
+if [[ "x${spotlight_exclusion_return}" == "x1" ]]; then
+    echo "Could not set exclusion list for spotlight. Allow \"Full Disk Access\" for your terminal app, restart it and try again."
+    exit 1
+fi
 
-echo "[Spotlight] Disable local Time Machine backups"
-hash tmutil &> /dev/null && sudo tmutil disablelocal
+# This doesn't seem to work anymore
+#echo "[Spotlight] Disable local Time Machine backups"
+#hash tmutil &> /dev/null && sudo tmutil disablelocal
 
 #
 # Time Machine
@@ -258,16 +267,6 @@ defaults write com.google.Chrome AppleEnableMouseSwipeNavigateWithScrolls -bool 
 defaults write com.google.Chrome.beta AppleEnableMouseSwipeNavigateWithScrolls -bool false
 defaults write com.google.Chrome.canary AppleEnableMouseSwipeNavigateWithScrolls -bool false
 
-echo "[Chrome] Use the system-native print preview dialog"
-defaults write com.google.Chrome DisablePrintPreview -bool true
-defaults write com.google.Chrome.beta DisablePrintPreview -bool true
-defaults write com.google.Chrome.canary DisablePrintPreview -bool true
-
-echo "[Chrome] Expand the print dialog by default"
-defaults write com.google.Chrome PMPrintingExpandedStateForPrint2 -bool true
-defaults write com.google.Chrome.beta PMPrintingExpandedStateForPrint2 -bool true
-defaults write com.google.Chrome.canary PMPrintingExpandedStateForPrint2 -bool true
-
 #
 # iTerm2
 #
@@ -279,8 +278,14 @@ defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 # Post-Process
 #
 
+echo "Activate some of the settings without logout"
+/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+
 echo "Kill affected applications"
-find ~/Library/Application\ Support/Dock -name "*.db" -maxdepth 1 -delete
+
+sudo launchctl stop com.apple.metadata.mds
+sudo launchctl start com.apple.metadata.mds
+
 for app in "Activity Monitor" \
     "Address Book" \
     "Calendar" \
@@ -289,6 +294,7 @@ for app in "Activity Monitor" \
     "Dock" \
     "Finder" \
     "Google Chrome Canary" \
+    "Google Chrome Beta" \
     "Google Chrome" \
     "Mail" \
     "Messages" \
@@ -301,7 +307,6 @@ for app in "Activity Monitor" \
     "Tweetbot" \
     "Twitter" \
     "iCal"; do
-    killall "${app}" &> /dev/null
+    killall "${app}" &> /dev/null || true
 done
 echo "Done. Note that some of these changes require a logout/restart to take effect."
-
