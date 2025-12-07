@@ -5,10 +5,10 @@ source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
 
 DOTFILES_DIR=$HOME/.dotfiles
 
-# Update dotfiles to master branch
-log_process_start "Update ${DOTFILES_DIR} to master"
+# Update dotfiles to main branch
+log_process_start "Update ${DOTFILES_DIR} to main"
 pushd ${DOTFILES_DIR} > /dev/null
-git pull --quiet origin master
+git pull --quiet origin main
 popd > /dev/null
 log_process_success
 
