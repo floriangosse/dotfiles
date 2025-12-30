@@ -26,7 +26,7 @@ log_process_success
 
 # Setup bin
 log_process_start "Link ~/.bin folder"
-ln -sf ${DOTFILES_DIR}/bin ${HOME}/.bin
+ln -sfn ${DOTFILES_DIR}/bin ${HOME}/.bin
 log_process_success
 
 # Setup ZSH
