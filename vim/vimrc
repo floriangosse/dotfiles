@@ -54,7 +54,13 @@ augroup END
 
 " Use system clipboard if available
 if has("clipboard")
-    set clipboard=unnamedplus
+    if has("unnamedplus")
+        " Linux/X11
+        set clipboard=unnamedplus
+    else
+        " macOS/Windows
+        set clipboard=unnamed
+    endif
 endif
 
 
