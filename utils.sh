@@ -28,6 +28,11 @@ log_process_fail () {
 }
 
 ask () {
+    # If not interactive, return false
+    if ! tty -s; then
+        return 1
+    fi
+
     # https://djm.me/ask
     local prompt default reply
 
@@ -62,4 +67,13 @@ ask () {
         esac
 
     done
+}
+
+force_or_ask () {
+    if [[ "$1" == "true" ]]; then
+        return 0
+    fi
+
+    ask "$2" "${3:-}"
+    return $?
 }

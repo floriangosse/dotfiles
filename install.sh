@@ -1,7 +1,19 @@
 #!/usr/bin/env bash
 set -e
+shopt -s extglob
 
 source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
+
+# This sets SETUP_<OPTION> variables based on command line arguments
+for arg in "$@"; do
+    case $arg in
+        --@(zsh|vim|tmux|nvm|homebrew))
+            var_name="SETUP_$(echo "${arg#--}" | tr '[:lower:]' '[:upper:]')"
+            declare "$var_name=true"
+            shift
+            ;;
+    esac
+done
 
 DOTFILES_DIR=$HOME/.dotfiles
 
@@ -18,7 +30,7 @@ ln -sf ${DOTFILES_DIR}/bin ${HOME}/.bin
 log_process_success
 
 # Setup ZSH
-if ask "Setup ZSH?" Y; then
+if force_or_ask "$SETUP_ZSH" "Setup ZSH?" Y; then
     log_process_start "Link ZSH files"
     ln -sfn ${DOTFILES_DIR}/zsh ${HOME}/.zsh
     ln -sf ${DOTFILES_DIR}/zsh/zshrc ${HOME}/.zshrc
@@ -26,7 +38,7 @@ if ask "Setup ZSH?" Y; then
 
     pushd ${DOTFILES_DIR}/zsh/plugins > /dev/null
 
-    if ask "Install zsh-syntax-hightlighting?" Y; then
+    if force_or_ask "$SETUP_ZSH" "Install zsh-syntax-hightlighting?" Y; then
         if [[ -d ./zsh-syntax-highlighting/.git ]]; then
             log_info "Already installed"
 
@@ -42,7 +54,7 @@ if ask "Setup ZSH?" Y; then
         fi
     fi
 
-    if ask "Install z?" Y; then
+    if force_or_ask "$SETUP_ZSH" "Install z?" Y; then
         if [[ -d ./z/.git ]]; then
             log_info "Already installed"
 
@@ -63,7 +75,7 @@ fi
 
 
 # Setup Vim
-if ask "Setup Vim?" Y; then
+if force_or_ask "$SETUP_VIM" "Setup Vim?" Y; then
     log_process_start "Linking Vim files"
     ln -sf ${DOTFILES_DIR}/vim/vimrc ${HOME}/.vimrc
     log_process_success
@@ -71,7 +83,7 @@ fi
 
 
 # Setup tmux
-if ask "Setup tmux?" Y; then
+if force_or_ask "$SETUP_TMUX" "Setup tmux?" Y; then
     log_process_start "Linking tmux files"
     ln -sf ${DOTFILES_DIR}/tmux/tmux.conf ${HOME}/.tmux.conf
     log_process_success
@@ -79,7 +91,7 @@ fi
 
 
 # Install nvm
-if ask "Install nvm?" N; then
+if force_or_ask "$SETUP_NVM" "Install nvm?" N; then
     if [[ -d ~/.nvm/.git ]]; then
         log_info "Already installed"
 
@@ -96,7 +108,7 @@ if ask "Install nvm?" N; then
 fi
 
 # Install Homebrew
-if ask "Install Homebrew?" Y; then
+if force_or_ask "$SETUP_HOMEBREW" "Install Homebrew?" Y; then
     if [[ -d /opt/homebrew ]]; then
         log_info "Already installed"
     else
