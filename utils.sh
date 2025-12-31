@@ -1,15 +1,25 @@
+is_interactive () {
+    if [ -n "$PS1" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 symbol_info="i"
 symbol_ok="\xE2\x9C\x94"
 symbol_error="\xE2\x9C\x97"
 symbol_warn="\xE2\x9D\x97"
 symbol_question="\xE2\x9D\x93"
 
-color_clean="\033[0m"
-color_fg_red="\033[0;31m"
-color_fg_green="\033[0;32m"
-color_fg_light_blue="\033[0;94m"
+if is_interactive; then
+    color_clean="\033[0m"
+    color_fg_red="\033[0;31m"
+    color_fg_green="\033[0;32m"
+    color_fg_light_blue="\033[0;94m"
 
-roll_back="\033[0K\r"
+    roll_back="\033[0K\r"
+fi
 
 log_info () {
     echo -e "[${color_fg_light_blue} ${symbol_info} ${color_clean}] $@"
@@ -29,7 +39,7 @@ log_process_fail () {
 
 ask () {
     # If not interactive, return false
-    if ! tty -s; then
+    if ! is_interactive; then
         return 1
     fi
 
