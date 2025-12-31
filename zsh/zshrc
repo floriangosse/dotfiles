@@ -39,13 +39,31 @@ export EDITOR=vim
 export GIT_EDITOR=${EDITOR}
 
 export PATH="${HOME}/go/bin:/usr/local/go/bin:$PATH"
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 
-if [[ -d "/opt/homebrew/opt/curl" ]]; then
-    export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+[ -z "${MANPATH-}" ] || export MANPATH=":${MANPATH#:}";
+
+# Register Homebrew paths
+if [[ "$OSTYPE" == linux* ]]; then
+    export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew";
+    export HOMEBREW_CELLAR="/home/linuxbrew/.linuxbrew/Cellar";
+    export HOMEBREW_REPOSITORY="/home/linuxbrew/.linuxbrew/Homebrew";
+elif [[ "$OSTYPE" == darwin* ]]; then
+    export HOMEBREW_PREFIX="/opt/homebrew";
+    export HOMEBREW_CELLAR="/opt/homebrew/Cellar";
+    export HOMEBREW_REPOSITORY="/opt/homebrew";
+fi
+
+if [[ -n "$HOMEBREW_PREFIX" ]]; then
+    fpath[1,0]="${HOMEBREW_PREFIX}/share/zsh/site-functions";
+    export PATH="${HOMEBREW_PREFIX}/bin:${HOMEBREW_PREFIX}/sbin${PATH+:$PATH}";
+    export INFOPATH="${HOMEBREW_PREFIX}/share/info:${INFOPATH:-}";
 fi
 
 if [[ "$OSTYPE" == darwin* ]]; then
+    if [[ -d "/opt/homebrew/opt/curl" ]]; then
+        export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+    fi
+
     if [[ -d "/Applications/Visual Studio Code.app" ]]; then
         export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
     fi
