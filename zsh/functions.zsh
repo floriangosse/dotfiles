@@ -114,6 +114,31 @@ git-branch-delete-with-rebase-fallback() {
     git branch -d $branch
 }
 
+git-worktree-add-and-cd() {
+    local branch_name=$1
+    local base_branch_name=$2
+
+    if [[ -z "$branch_name" ]]; then
+        echo "No name given." >&2
+        echo "Usage: gwa <branch_name> [<base_branch_name>]" >&2
+        return 1
+    fi
+
+    local repo_dir="$(git rev-parse --show-toplevel)"
+    local repo_basename="$(basename "${repo_dir}")"
+    local repo_parentdir="$(dirname "${repo_dir}")"
+
+    local worktree_dir="${repo_parentdir}/${repo_basename}_${branch_name}"
+
+    local args=(-b "${branch_name}" "${worktree_dir}")
+    if [[ -n "$base_branch_name" ]]; then
+        args+=("${base_branch_name}")
+    fi
+
+    git worktree add ${args[@]}
+    cd "${worktree_dir}"
+}
+
 #
 # AWS
 #
