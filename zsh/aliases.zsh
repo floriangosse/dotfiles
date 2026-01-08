@@ -25,7 +25,10 @@ alias glola="git log --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %C
 alias glog='git log --oneline --decorate --graph'
 alias gloga='git log --oneline --decorate --graph --all'
 alias gbdr='git-branch-delete-with-rebase-fallback'
-alias gwa='git-worktree-add-and-cd'
+alias gwl='git worktree list'
+alias gwa='git worktree add'
+alias gwac='git-worktree-add-and-cd'
+alias gwr='git worktree remove'
 
 # DNF
 alias dnfs='dnf search'
