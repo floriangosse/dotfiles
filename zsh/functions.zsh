@@ -114,13 +114,11 @@ git-branch-delete-with-rebase-fallback() {
     git branch -d $branch
 }
 
-git-worktree-add-and-cd() {
+_git-worktree-add-workdir() {
     local branch_name=$1
-    local base_branch_name=$2
 
     if [[ -z "$branch_name" ]]; then
         echo "No name given." >&2
-        echo "Usage: gwa <branch_name> [<base_branch_name>]" >&2
         return 1
     fi
 
@@ -128,7 +126,20 @@ git-worktree-add-and-cd() {
     local repo_basename="$(basename "${repo_dir}")"
     local repo_parentdir="$(dirname "${repo_dir}")"
 
-    local worktree_dir="${repo_parentdir}/${repo_basename}_${branch_name}"
+    echo "${repo_parentdir}/${repo_basename}_${branch_name}"
+}
+
+git-worktree-add-quick() {
+    local branch_name=$1
+    local base_branch_name=$2
+
+    if [[ -z "$branch_name" ]]; then
+        echo "No name given." >&2
+        echo "Usage: git-worktree-add-quick <branch_name> [<base_branch_name>]" >&2
+        return 1
+    fi
+
+    local worktree_dir="$(_git-worktree-add-workdir "${branch_name}")"
 
     local args=(-b "${branch_name}" "${worktree_dir}")
     if [[ -n "$base_branch_name" ]]; then
@@ -136,7 +147,10 @@ git-worktree-add-and-cd() {
     fi
 
     git worktree add ${args[@]}
-    cd "${worktree_dir}"
+}
+
+git-worktree-add-quick-cd() {
+    git-worktree-add-quick "$@" && cd "$(_git-worktree-add-workdir "$1")"
 }
 
 #

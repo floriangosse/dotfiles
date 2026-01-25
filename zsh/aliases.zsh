@@ -27,7 +27,8 @@ alias gloga='git log --oneline --decorate --graph --all'
 alias gbdr='git-branch-delete-with-rebase-fallback'
 alias gwl='git worktree list'
 alias gwa='git worktree add'
-alias gwac='git-worktree-add-and-cd'
+alias gwaq='git-worktree-add-quick'
+alias gwaqc='git-worktree-add-quick-cd'
 alias gwr='git worktree remove'
 
 # DNF
