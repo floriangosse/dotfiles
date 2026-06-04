@@ -1,9 +1,5 @@
 is_interactive () {
-    if [ -n "$PS1" ]; then
-        return 0
-    else
-        return 1
-    fi
+    [[ -t 0 ]]
 }
 
 symbol_info="i"
