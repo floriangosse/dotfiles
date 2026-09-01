@@ -21,24 +21,11 @@ if [[ -f ~/.zsh/plugins/z/z.sh ]]; then
     source ~/.zsh/plugins/z/z.sh
 fi
 
-# Load nvm if installed
-export NVM_DIR="$HOME/.nvm"
-if [[ -f "$NVM_DIR/nvm.sh" ]]; then
-    # It seems `source nvm --no-use && nvm use default` is faster by a few milliseconds than just `source nvm.sh`.
-    source "$NVM_DIR/nvm.sh" --no-use && nvm use default --silent
-
-    if [[ -f "$NVM_DIR/bash_completion" ]]; then
-        source "$NVM_DIR/bash_completion"
-    fi
-fi
-
 export LC_ALL=en_GB.UTF-8
 export LC_CTYPE=en_GB.UTF-8
 
 export EDITOR=vim
 export GIT_EDITOR=${EDITOR}
-
-export PATH="${HOME}/go/bin:/usr/local/go/bin:$PATH"
 
 [ -z "${MANPATH-}" ] || export MANPATH=":${MANPATH#:}";
 
@@ -66,6 +53,19 @@ if [[ "$OSTYPE" == darwin* ]]; then
 
     if [[ -d "/Applications/Visual Studio Code.app" ]]; then
         export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+    fi
+fi
+
+export PATH="${HOME}/go/bin:/usr/local/go/bin:$PATH"
+
+# Load nvm if installed
+export NVM_DIR="$HOME/.nvm"
+if [[ -f "$NVM_DIR/nvm.sh" ]]; then
+    # It seems `source nvm --no-use && nvm use default` is faster by a few milliseconds than just `source nvm.sh`.
+    source "$NVM_DIR/nvm.sh" --no-use && nvm use default --silent
+
+    if [[ -f "$NVM_DIR/bash_completion" ]]; then
+        source "$NVM_DIR/bash_completion"
     fi
 fi
 
